@@ -1,12 +1,11 @@
 from src.user.dtos import UserSchema, LoginSchema
 from src.user.models import UserModel
 from sqlalchemy.orm import Session
-from fastapi import HTTPException, status, Request
+from fastapi import HTTPException, status
 from pwdlib import PasswordHash
 from src.utils.setting import settings
 import jwt
 from datetime import datetime, timedelta
-from jwt.exceptions import InvalidTokenError
 
 password_hash = PasswordHash.recommended()
 
@@ -58,26 +57,3 @@ def login_user(body: LoginSchema, db: Session):
     token = jwt.encode({"_id": is_user.id, "exp": exp_time.timestamp()}, settings.SECRET_KEY, settings.ALGORITHM)
 
     return {"token": token}
-
-def is_authenticated(request: Request, db: Session):
-    try:
-        token = request.headers.get("Authorization")
-
-        if not token:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found...")
-
-        token = token.split(" ")[-1]
-
-        data = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
-
-        user_id = data.get("_id")
-        
-        user = db.query(UserModel).filter(UserModel.id == user_id).first()
-
-        if not user:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found...")
-        
-        return user
-    
-    except InvalidTokenError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token...")
