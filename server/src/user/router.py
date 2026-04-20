@@ -15,6 +15,3 @@ def register(body: UserSchema, db: Session = Depends(get_db)):
 def login_user(body: LoginSchema, db: Session = Depends(get_db)):
     return controller.login_user(body, db)
 
-@user_routes.get("/is_auth", response_model=UserResponseSchema, status_code = status.HTTP_200_OK)
-def is_auth(request: Request, db: Session = Depends(get_db)):
-    return controller.is_authenticated(request, db)
