@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String
 from src.utils.db import Base
 
 class UserModel(Base):
@@ -9,4 +9,3 @@ class UserModel(Base):
     username = Column(String, nullable=False, unique=True)
     email = Column(String)
     hash_password = Column(String, nullable=False)
-    created_at = Column(DateTime)

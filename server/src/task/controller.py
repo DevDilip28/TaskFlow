@@ -1,4 +1,4 @@
-from src.task.dots import TaskSchema
+from src.task.dtos import TaskSchema
 from sqlalchemy.orm import Session
 from src.task.models import TaskModel
 from fastapi import HTTPException
